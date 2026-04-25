@@ -1,31 +1,38 @@
-part of cart_view;
+import 'package:flutter/material.dart';
+import '../../viewmodels/cart_view_model.dart'; // ✅ FIXED
 
-class _CartMobile extends StatefulWidget {
-  @override
-  __CartMobileState createState() => __CartMobileState();
+class CartMobile extends StatefulWidget {
   final CartViewModel viewModel;
-  final Function onMenuPressed;
-  _CartMobile(this.viewModel, this.onMenuPressed);
+  final VoidCallback onMenuPressed;
+
+  const CartMobile(
+    this.viewModel,
+    this.onMenuPressed, {
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<CartMobile> createState() => _CartMobileState();
 }
 
-class __CartMobileState extends State<_CartMobile> {
+class _CartMobileState extends State<CartMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: Material(
-          child: IconButton(
-            onPressed: widget.onMenuPressed,
-            icon: Icon(
-              Icons.menu,
-              color: Colors.black,
-            ),
-          ),
+        leading: IconButton(
+          onPressed: widget.onMenuPressed,
+          icon: const Icon(Icons.menu, color: Colors.black),
         ),
       ),
-      body: Center(child: Text('CartMobile')),
+      body: Center(
+        child: Text(
+          'Cart Items: ${widget.viewModel.items.length}',
+          style: const TextStyle(fontSize: 18),
+        ),
+      ),
     );
   }
 }

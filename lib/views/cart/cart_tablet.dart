@@ -1,14 +1,18 @@
-part of cart_view;
+import 'package:flutter/material.dart';
 
-class _CartTablet extends StatelessWidget {
+class CartViewModel {} // temporary stub (remove if you already have it)
+
+class CartTablet extends StatelessWidget {
   final CartViewModel viewModel;
 
-  _CartTablet(this.viewModel);
+  const CartTablet(this.viewModel, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('CartTablet')),
+      body: Center(
+        child: Text('CartTablet'),
+      ),
     );
   }
 }

@@ -1,38 +1,39 @@
 library settings_view;
 
 import 'package:flutter/material.dart';
-import 'package:kf_drawer/kf_drawer.dart';
-import 'package:provider_architecture/provider_architecture.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import 'settings_view_model.dart';
 
 part 'settings_desktop.dart';
-
 part 'settings_mobile.dart';
-
 part 'settings_tablet.dart';
 
-class SettingsView extends KFDrawerContent {
+class SettingsView extends StatefulWidget {
+  const SettingsView({Key? key}) : super(key: key);
+
   @override
-  _SettingsViewState createState() => _SettingsViewState();
+  State<SettingsView> createState() => _SettingsViewState();
 }
 
 class _SettingsViewState extends State<SettingsView> {
+  late SettingsViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = SettingsViewModel();
+
+    // If your viewModel needs init logic, call it here
+    // viewModel.init();
+  }
+
   @override
   Widget build(BuildContext context) {
-    SettingsViewModel viewModel = SettingsViewModel();
-    return ViewModelProvider<SettingsViewModel>.withConsumer(
-        viewModel: viewModel,
-        onModelReady: (viewModel) {
-          // Do something once your viewModel is initialized
-        },
-        builder: (context, viewModel, child) {
-          return ScreenTypeLayout(
-            mobile: _SettingsMobile(viewModel),
-            desktop: _SettingsDesktop(viewModel),
-            tablet: _SettingsTablet(viewModel),
-          );
-        });
+    return ScreenTypeLayout.builder(
+      mobile: (BuildContext context) => _SettingsMobile(viewModel),
+      tablet: (BuildContext context) => _SettingsTablet(viewModel),
+      desktop: (BuildContext context) => _SettingsDesktop(viewModel),
+    );
   }
 }

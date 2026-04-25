@@ -1,33 +1,37 @@
 library recommanded_tab_view;
 
 import 'package:flutter/material.dart';
-import 'package:mvvm_flutter/core/models/product.model.dart';
-import 'package:provider_architecture/provider_architecture.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import 'recommanded_tab_view_model.dart';
+import '../../models/product.dart';
 
 part 'recommanded_tab_desktop.dart';
-
 part 'recommanded_tab_mobile.dart';
-
 part 'recommanded_tab_tablet.dart';
 
 class RecommandedTabView extends StatelessWidget {
+  const RecommandedTabView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    RecommandedTabViewModel viewModel = RecommandedTabViewModel();
-    return ViewModelProvider<RecommandedTabViewModel>.withConsumer(
+    final RecommandedTabViewModel viewModel = RecommandedTabViewModel();
+
+    final List<Product> products = viewModel.products;
+
+    return ScreenTypeLayout.builder(
+      mobile: (_) => _RecommandedTabMobile(
         viewModel: viewModel,
-        onModelReady: (viewModel) {
-          // Do something once your viewModel is initialized
-        },
-        builder: (context, viewModel, child) {
-          return ScreenTypeLayout(
-            mobile: _RecommandedTabMobile(viewModel),
-            desktop: _RecommandedTabDesktop(viewModel),
-            tablet: _RecommandedTabTablet(viewModel),
-          );
-        });
+        products: products,
+      ),
+      tablet: (_) => _RecommandedTabTablet(
+        viewModel: viewModel,
+        products: products,
+      ),
+      desktop: (_) => _RecommandedTabDesktop(
+        viewModel: viewModel,
+        products: products,
+      ),
+    );
   }
 }

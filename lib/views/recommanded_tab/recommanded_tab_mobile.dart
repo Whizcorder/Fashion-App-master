@@ -1,47 +1,56 @@
 part of recommanded_tab_view;
 
+import 'package:flutter/material.dart';
+import 'package:your_project_name/models/product.dart';
+
 class _RecommandedTabMobile extends StatelessWidget {
   final RecommandedTabViewModel viewModel;
+  final List<Product> products;
 
-  _RecommandedTabMobile(this.viewModel);
+  const _RecommandedTabMobile({
+    Key? key,
+    required this.viewModel,
+    required this.products,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
-      child: new GridView.builder(
+      child: GridView.builder(
         itemCount: products.length,
-        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 5,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 1),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          childAspectRatio: 0.75,
+        ),
         itemBuilder: (BuildContext context, int index) {
+          final product = products[index];
+
           return InkWell(
-              onTap: () {
-                viewModel.nav(products[index]);
-                //Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailsView(products[index])));
-              },
-              child: Hero(
-                  tag:products[index].position,
-                  child: GridItem(products[index])));
+            onTap: () {
+              viewModel.nav(product);
+            },
+            child: Hero(
+              tag: product.position, // ensure this is unique
+              child: GridItem(product: product),
+            ),
+          );
         },
       ),
     );
   }
 }
 
-class GridItem extends StatefulWidget {
-  Product product;
-  GridItem(Product product) {
-    this.product = product;
-  }
+class GridItem extends StatelessWidget {
+  final Product product;
 
-  @override
-  _GridItemState createState() => _GridItemState();
-}
+  const GridItem({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
 
-class _GridItemState extends State<GridItem> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -53,10 +62,12 @@ class _GridItemState extends State<GridItem> {
             padding: const EdgeInsets.only(top: 8.0, right: 4, left: 4),
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(widget.product.imageUrl))),
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(product.imageUrl),
+                ),
+              ),
             ),
           ),
         ),
@@ -65,20 +76,22 @@ class _GridItemState extends State<GridItem> {
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 4),
             child: Text(
-              widget.product.productName,
-              style: TextStyle(color: Colors.black),
+              product.productName,
+              style: const TextStyle(color: Colors.black),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
         Flexible(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 6.0, left: 4),
-              child: Text(
-                "\$${widget.product.price}",
-                style: TextStyle(color: Colors.black26),
-              ),
-            ))
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 6.0, left: 4),
+            child: Text(
+              "\$${product.price}",
+              style: const TextStyle(color: Colors.black54),
+            ),
+          ),
+        ),
       ],
     );
   }

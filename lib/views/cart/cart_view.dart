@@ -1,39 +1,29 @@
-library cart_view;
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kf_drawer/kf_drawer.dart';
-import 'package:provider_architecture/provider_architecture.dart';
-import 'package:responsive_builder/responsive_builder.dart';
+import 'package:mvvm_flutter/viewmodels/cart_view_model.dart';
+import 'cart_mobile.dart';
 
-import 'cart_view_model.dart';
+class CartView extends StatefulWidget {
+  const CartView({Key? key}) : super(key: key);
 
-part 'cart_desktop.dart';
-
-part 'cart_mobile.dart';
-
-part 'cart_tablet.dart';
-
-class CartView extends KFDrawerContent {
   @override
-  _CartViewState createState() => _CartViewState();
+  State<CartView> createState() => _CartViewState();
 }
 
 class _CartViewState extends State<CartView> {
+  late final CartViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = CartViewModel();
+  }
+
+  void _onMenuPressed() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-   final CartViewModel viewModel = CartViewModel();
-    return ViewModelProvider<CartViewModel>.withConsumer(
-        viewModel: viewModel,
-        onModelReady: (viewModel) {
-          // Do something once your viewModel is initialized
-        },
-        builder: (context, viewModel, child) {
-          return ScreenTypeLayout(
-            mobile: _CartMobile(viewModel, widget.onMenuPressed),
-            desktop: _CartDesktop(viewModel),
-            tablet: _CartTablet(viewModel),
-          );
-        });
+    return CartMobile(viewModel, _onMenuPressed);
   }
 }
